@@ -1,0 +1,27 @@
+{
+  "name": "domosed",
+  "version": "1.0.3",
+  "description": "Библиотека для работы с API сервиса \"Домосед\"",
+  "main": "./src/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ub1x/domosed.git"
+  },
+  "keywords": [
+    "domosed",
+    "domosed-api",
+    "domosed-js"
+  ],
+  "author": "Danya Rubcov",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ub1x/domosed/issues"
+  },
+  "homepage": "https://github.com/ub1x/domosed",
+  "dependencies": {
+    "express": "^4.17.1",
+    "ip": "^1.1.5",
+    "node-fetch": "2.6.1"
+  },
+  "devDependencies": {}
+}
