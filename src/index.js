@@ -29,7 +29,7 @@ class Domosed {
                 'Вы не указали параметр "methodName"'
             )
         }
-        const json = await fetch(this.baseURL + '/' + methodName, {
+        const json = await fetch(this.baseURL + methodName, {
             headers: {
                 'Content-Type': 'application/json'
             },
