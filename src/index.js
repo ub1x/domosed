@@ -1,11 +1,9 @@
 
-const fetch = require('node-fetch')
-const express = require('express')
-const ip = require('ip');
+const fetch = require('node-fetch');
+const { APIError } = require('./utils/errors');
 class Domosed {
-    baseURL = 'https://minebattle.ru/api/test';
-    isStarted = false;
-    onPaymentCallback = null;
+    baseURL = 'https://minebattle.ru/api/';
+    onPaymentCallback
     /**
      * @param {string} access_token Токен проекта
      */
@@ -23,12 +21,12 @@ class Domosed {
      * Вызов любого метода API
      * @param {string} methodName Название метода
      * @param {object} params Параметры метода
-     * @returns {*} Ответ на Ваш API запрос
+     * @returns {string | object} Ответ на Ваш API запрос
      */
     async call(methodName, params = {}) {
         if (!methodName) {
             throw new ReferenceError(
-                'Вы не указали параметр \"methodName\"'
+                'Вы не указали параметр "methodName"'
             )
         }
         const json = await fetch(this.baseURL + '/' + methodName, {
@@ -78,8 +76,8 @@ class Domosed {
 
     /**
      * Совершает перевод монет указанному пользователю
-     * @param {Number} toId 
-     * @param {Number} amount 
+     * @param {Number} toId ID пользователя
+     * @param {Number} amount Количество монет
      * @returns {object} Объект перевода
      */
     sendPayment(toId, amount) {
@@ -96,7 +94,7 @@ class Domosed {
         return this.call('payment.getHistory', { type, limit })
     }
     /**
-     * @returns {String} Объект перевода
+     * @returns {string} Объект перевода
      */
     async getPaymentLink() {
         const { id } = await this.getProjectInfo()
@@ -104,60 +102,41 @@ class Domosed {
     }
     /**
      * Запускает прослушивание входящих переводов.
-     * Вы можете не указывать параметры ниже, и они установятся по умолчанию.
-     * @param {*} path Ваш IP адрес или домен.
+     * @param {string | Number} path Ваш IP адрес или домен.
      * @param {Number} port Прослушиваемый порт
      */
     async startPolling(path, port = 8080) {
-        if (!path) path = ip.address()
+        if (!path) throw new ReferenceError('Параметр "path" обязателен.')
+        if (!path.startsWith('http://') || !path.startsWith('https://')) throw new ReferenceError('Параметр "path" должен начинаться с протокола http(s)://.')
         this.call('merchants.webhook.set', {
-            url: 'http://' + path + ':' + port + '/transfer'
+            url: path + ':' + port + '/transfer'
         })
         return new Promise((resolve) => {
-            const app = express();
+            const fastify = require('fastify')();
 
-            app.use(express.urlencoded({ extended: true }))
-            app.use(express.json({ strict: true }))
-            app.set("view engine", "ejs")
-            app.use(express.static("public"))
+            fastify.get('/', (req, res) => {
+                return res.send('ok')
+            })
 
-            app.post('/transfer', (req, res) => {
-                res.sendStatus(200)
+            fastify.post('/transfer', (req, res) => {
+                res.send('ok')
                 if (req.body.type === 'transfer') {
                     const { amount, fromId } = req.body
-                    this.onPaymentCallback({
-                        amount,
-                        fromId
-                    })
+                    this.onPaymentCallback({ amount, fromId })
                 }
             })
-            app.listen(port, () => {
-                console.log('Прослушивание запущено...')
+            fastify.listen(port, '::', () => {
+                console.log('Прослушивание запущено...' + port)
                 resolve()
             })
         })
     }
 
-
     /**
-     * @returns {object} Информация о переводе
+     * @returns {object} Информация о переводе 
      */
-    onPayment(context = {}) {
+    onPayment(context) {
         this.onPaymentCallback = context
-    }
-}
-
-class APIError extends Error {
-
-    /**
-     * @param params Параметры ошибки
-     */
-
-    constructor(params) {
-        super(params.msg)
-        this.code = params.code;
-        this.msg = params.msg;
-        Error.captureStackTrace(this, this.constructor);
     }
 }
 

@@ -1,49 +1,160 @@
----
 
+# Domosed API
+NodeJS библиотека для работы с API сервиса "Домосед"
+# Установка
+**yarn**
+ `yarn add domosed`
+ 
+**npm**
+ `npm i -S domosed`
 
----
+## Подключение
 
-<h1 id="domosed-api">Domosed API</h1>
-<p>NodeJS библиотека для работы с API сервиса “Домосед”</p>
-<h1 id="установка">Установка</h1>
-<p><em>yarn</em><br>
-<code>yarn add domosed</code></p>
-<p><em>npm</em><br>
-<code>npm i -S domosed</code></p>
-<h2 id="подключение">Подключение</h2>
-<pre class=" language-js"><code class="prism  language-js"><span class="token keyword">const</span> <span class="token punctuation">{</span> Domosed <span class="token punctuation">}</span> <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'./index'</span><span class="token punctuation">)</span>
-<span class="token keyword">const</span> ds <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Domosed</span><span class="token punctuation">(</span>token<span class="token punctuation">)</span>
-</code></pre>
-<h2 id="методы-api">Методы API</h2>
+``` js
+const {
+    Domosed
+} = require('domosed')
+const ds = new Domosed(token)
+```
 
-<table>
-<thead>
-<tr>
-<th>Параметр</th>
-<th>Тип</th>
-<th>Обязателен</th>
-<th>Описание</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>methodName</td>
-<td>String</td>
-<td>Да</td>
-<td>Имя метода</td>
-</tr>
-<tr>
-<td>params</td>
-<td>object</td>
-<td>Нет</td>
-<td>Параметры запроса</td>
-</tr>
-</tbody>
-</table><p><strong>Пример:</strong></p>
-<pre class=" language-js"><code class="prism  language-js"><span class="token keyword">async</span> <span class="token keyword">function</span> <span class="token function">run</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-	<span class="token keyword">const</span> info <span class="token operator">=</span> <span class="token keyword">await</span> ds<span class="token punctuation">.</span><span class="token function">call</span><span class="token punctuation">(</span><span class="token string">'merchants.getInfo'</span><span class="token punctuation">)</span>
-	console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>info<span class="token punctuation">)</span>
-<span class="token punctuation">}</span>
-<span class="token function">run</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token keyword">catch</span><span class="token punctuation">(</span>console<span class="token punctuation">.</span>error<span class="token punctuation">)</span><span class="token punctuation">;</span>
-</code></pre>
+## Методы API
+***call*** - универсальный метод отправки запроса
 
+| Параметр | Тип | Обязателен | Описание |
+|--|--|--|--|
+| methodName | string | Да |Имя метода |
+| params | object | Нет | Параметры запроса |
+
+**Пример:**
+
+``` js
+async function run() {
+    const info = await ds.call('merchants.merchants.edit',{
+	    name: 'My test app'
+    })
+    console.log(info)
+}
+run().catch(console.error);
+```
+##
+***getProjectInfo*** - Получить информацию о Вашем проекте
+
+**Пример:**
+
+``` js
+async function run() {
+    const info = await ds.getProjectInfo()
+	console.log(info)
+}
+run().catch(console.error);
+```
+
+##
+***editProjectInfo*** - Редактировать информацию о Вашем проекте
+
+| Параметр | Тип | Обязателен | Описание |
+|--|--|--|--|
+| name | string | Нет | Название проекта |
+| avatar| string | Нет | Прямая ссылка на новый аватар проекта |
+| group_id| number | Нет | ID группы проекта |
+* Хотя-бы 1 параметр должен быть передан
+
+**Пример:**
+
+``` js
+async function run() {
+    const info = await ds.editProjectInfo(
+	    'My app', 
+	    'vk.com/images/camera_200.png',
+		1
+	);
+	console.log(info)
+};
+
+run().catch(console.error); 
+```
+##
+***sendVerify*** - Отправить Ваш проект на модерацию
+В случае успешной модерации - Вы будете опубликованы в разделе "развлечения" официального приложения Домосед.
+
+**Пример:**
+``` js
+async function run() {
+    const info = await ds.sendVerify();
+	console.log(info);
+};
+
+run().catch(console.error); 
+```
+##
+***sendPayment*** - Совершить перевод монет указанному пользователю
+
+| Параметр | Тип | Обязателен | Описание |
+|--|--|--|--|
+| toId| number | да| ID пользователя, которому Вы собираетесь совершить перевод |
+| amount | number | да|Количество монет, которое Вы собираетесь перевести указанному пользователю  |
+
+**Пример:**
+``` js
+async function run() {
+    const info = await ds.sendPayment(1, 1);
+	console.log(info);
+};
+
+run().catch(console.error); 
+```
+##
+***getHistoryPayments*** - Получить историю последних платежей
+
+| Параметр | Тип | Обязателен | Описание |
+|--|--|--|--|
+| type | string | нет| Тип возвращаемых переводов(all — все, out — исходящие, in — входящие) |
+| limit | number | нет |Количество возвращаемых переводов, от 1 до 50  |
+
+**Пример:**
+``` js
+async function run() {
+    const info = await ds.getHistoryPayments('all', 50);
+	console.log(info);
+};
+
+run().catch(console.error); 
+```
+##
+***getPaymentLink*** - Получить ссылку на перевод монет проекту
+
+**Пример:**
+``` js
+async function run() {
+    const info = await ds.getPaymentLink();
+	console.log(info);
+};
+
+run().catch(console.error); 
+```
+##
+***Прослушивание входящих переводов***
+Для начала Вам стоит вызвать функцию **startPolling**
+
+| Параметр | Тип | Обязателен | Описание |
+|--|--|--|--|
+| path| string\number  | да | Ваш IP адрес или домен. |
+| port | number | нет |Прослушиваемый порт |
+
+Затем Вам нужно вызвать функцию **onPayment**, в параметры передать callback функцию.
+
+**Пример:**
+``` js
+function run() {
+    ds.startPolling('myAwesomeDomen.ru', 80);
+	ds.onPayment(context  => {
+		const {
+			amount, 
+			fromId
+		} = context;
+		console.log(context);
+	})
+};
+
+run().catch(console.error); 
+```

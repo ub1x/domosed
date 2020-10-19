@@ -1,8 +1,8 @@
 {
   "name": "domosed",
-  "version": "1.0.3",
+  "version": "1.0.7",
   "description": "Библиотека для работы с API сервиса \"Домосед\"",
-  "main": "./src/index.js",
+  "main": "src/index",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ub1x/domosed.git"
@@ -19,8 +19,7 @@
   },
   "homepage": "https://github.com/ub1x/domosed",
   "dependencies": {
-    "express": "^4.17.1",
-    "ip": "^1.1.5",
+    "fastify": "^3.4.1",
     "node-fetch": "2.6.1"
   },
   "devDependencies": {}
