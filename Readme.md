@@ -134,6 +134,8 @@ run().catch(console.error);
 ```
 ##
 ***Прослушивание входящих переводов:***
+> *Наша библиотека автоматически сверяет hash входящих переводов, защищая Вас от умыслов злоумышленников.*
+
 Для начала Вам стоит вызвать функцию **startPolling**
 
 | Параметр | Тип | Обязателен | Описание |
@@ -143,17 +145,19 @@ run().catch(console.error);
 
 Затем Вам нужно вызвать подписаться на входящие переводы, используя функцию **onPayment**, в параметры который нужно передать callback функцию.
 
+
 **Пример:**
 ``` js
 function run() {
-    ds.startPolling('myAwesomeDomen.ru', 80);
+	ds.startPolling('myAwesomeDomen.ru', 80);
+	
 	ds.onPayment(context  => {
 		const {
 			amount, 
 			fromId
 		} = context;
 		console.log(context);
-	})
+	});
 };
 
 run().catch(console.error); 

@@ -1,5 +1,6 @@
 
 const fetch = require('node-fetch');
+const md5 = require('md5')
 const { APIError } = require('./utils/errors');
 class Domosed {
     baseURL = 'https://minebattle.ru/api/';
@@ -107,7 +108,7 @@ class Domosed {
      */
     async startPolling(path, port = 8080) {
         if (!path) throw new ReferenceError('Параметр "path" обязателен.')
-        if (!path.startsWith('http://') || !path.startsWith('https://')) throw new ReferenceError('Параметр "path" должен начинаться с протокола http(s)://.')
+        if (!path.startsWith('http://') && !path.startsWith('https://')) throw new ReferenceError('Параметр "path" должен начинаться с протокола http(s)://.')
         this.call('merchants.webhook.set', {
             url: path + ':' + port + '/transfer'
         })
@@ -121,12 +122,14 @@ class Domosed {
             fastify.post('/transfer', (req, res) => {
                 res.send('ok')
                 if (req.body.type === 'transfer') {
-                    const { amount, fromId } = req.body
-                    this.onPaymentCallback({ amount, fromId })
+                    const { amount, fromId, hash } = req.body
+                    if (hash === md5(this.access_token + amount + fromId)) {
+                        this.onPaymentCallback({ amount, fromId })
+                    }
                 }
             })
             fastify.listen(port, '::', () => {
-                console.log('Прослушивание запущено...' + port)
+                console.log('Прослушивание запущено...')
                 resolve()
             })
         })

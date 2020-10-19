@@ -1,6 +1,6 @@
 {
   "name": "domosed",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "Библиотека для работы с API сервиса \"Домосед\"",
   "main": "src/index",
   "repository": {
@@ -20,7 +20,8 @@
   "homepage": "https://github.com/ub1x/domosed",
   "dependencies": {
     "fastify": "^3.4.1",
-    "node-fetch": "2.6.1"
+    "node-fetch": "2.6.1",
+    "md5": "^2.3.0"
   },
   "devDependencies": {}
 }
