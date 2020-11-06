@@ -1,6 +1,6 @@
 {
   "name": "domosed",
-  "version": "1.11.1",
+  "version": "1.12.2",
   "description": "Библиотека для работы с API сервиса \"Домосед\"",
   "main": "src/index",
   "repository": {

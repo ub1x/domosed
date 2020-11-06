@@ -104,7 +104,7 @@ class Domosed {
     */
     async getBalance(userIds) {
         if (!userIds) throw new ReferenceError('Параметр "userIds" обязателен.')
-        if (!Array.isArray(userIds) && !Number(userIds)) throw new ReferenceError('Параметр "userIds" должен быть массивом или числом.')
+        if (!Array.isArray(userIds) && !+userIds) throw new ReferenceError('Параметр "userIds" должен быть массивом или числом.')
         return this.call('users.getBalance', { userIds })
     }
 
@@ -122,7 +122,7 @@ class Domosed {
      * @param {Number} port Прослушиваемый порт
      * @description Запускает прослушивание входящих переводов
      */
-    async startPolling(path, port = 8080) {
+    async start(path, port = 8080) {
         if (!path) throw new ReferenceError('Параметр "path" обязателен.')
         if (!path.startsWith('http')) throw new ReferenceError('Параметр "path" должен начинаться с протокола http(s):// .')
         this.call('merchants.webhook.set', {
