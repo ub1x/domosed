@@ -5,7 +5,7 @@ const fastify = require('fastify')();
 const { APIError } = require('./utils/errors');
 
 class Domosed {
-    baseURL = 'https://minebattle.ru/api/';
+    baseURL = 'https://az-games.ru/api/';
     onPaymentCallback
 
     /**

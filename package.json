@@ -1,9 +1,8 @@
 {
   "name": "domosed",
-  "version": "1.12.3",
+  "version": "1.12.4",
   "description": "Библиотека для работы с API сервиса \"Домосед\"",
   "main": "src/index.js",
-  "types": "src/index.d.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ub1x/domosed.git"
