@@ -5,7 +5,7 @@ const fastify = require('fastify')();
 const { APIError } = require('./utils/errors');
 
 class Domosed {
-    baseURL = 'https://az-games.ru/api/';
+    baseURL = 'https://api.domosed.danyarub.ru/api/';
     onPaymentCallback
 
     /**
