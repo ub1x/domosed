@@ -1,3 +1,5 @@
+# DEPRECATED. Пожалуйста, используйте библиотеку [`domosed-ts`](https://npm.im/package/domosed-ts)
+
 # Domosed API
 
 NodeJS библиотека для работы с API сервиса "Домосед"
